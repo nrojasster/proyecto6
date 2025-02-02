@@ -11,8 +11,6 @@ connectDB();
 app.use(cors())
 app.use(express.json());
 
-// const auth = require('./middleware/authorization');
-
 app.use('/api/user', userRouter);
 app.use('/api/car',carRouter1);
 
