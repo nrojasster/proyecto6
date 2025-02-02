@@ -47,6 +47,7 @@ https://proyecto6-a7j5.onrender.com/api/
 Variables de entorno:
 
 **MONGODB_URI**  (ruta de la BD en MongoDB Atlas)
+
 **SECRET** (frase para encriptar)
 
 
