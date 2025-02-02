@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
     }
 
     try {
-        let [type, token] = authorization.split(" "); // en el indice 0 del arreglo se encuentra el type y en el indice 1 se encuentra el token
+        let [type, token] = authorization.split(" "); 
         if (type === 'Token' || type === 'Bearer') {
             const openToken = jwt.verify(token, process.env.SECRET);
             req.user = openToken.user    
