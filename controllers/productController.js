@@ -1,9 +1,10 @@
 const Product = require('../models/Product');
-//const stripe = require("stripe")(process.env.STRIPE_KEY);
-const stripe = require("stripe")("sk_test_51QxqlvGaGdYftQkfd4DGIpWkGtTiMqGGgKq2yO976iM0cENBpXVaCRnKYN1H4K5MgnGDRbFwMDgbZDi4dKFjnwhL00aLZ7KSQU")
+
+// const stripe = require("stripe")(process.env.STRIPE_KEY)
 //
 exports.getAllProducts = async (req, res) => {
     try {
+        // console.log('process.env.STRIPE_KEY=>', process.env.STRIPE_KEY)
         const product = await Product.find({}) 
         return res.json({ product })
     } catch (error) {
@@ -61,7 +62,7 @@ exports.deleteProductById = async (req, res) => {
 //Crear productos en MongoBD y en Stripe ****
 exports.create = async (req, res) => {
     const { name, description, currency, price, prices, image, img, slug } = req.body;
-  
+    const stripe = require("stripe")(process.env.STRIPE_KEY)
     console.log(req.body);
   
     // STRIPE

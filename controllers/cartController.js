@@ -1,8 +1,6 @@
 const Cart = require("../models/Cart");
 const User = require("../models/User");
-require("dotenv").config;
 
-const stripe = require("stripe")("sk_test_51QxqlvGaGdYftQkfd4DGIpWkGtTiMqGGgKq2yO976iM0cENBpXVaCRnKYN1H4K5MgnGDRbFwMDgbZDi4dKFjnwhL00aLZ7KSQU");
 // Función para modificar carrito
 exports.editCart = async (req, res) => {
     // Obtiene el ID del usuario de la solicitud
@@ -186,6 +184,7 @@ exports.getCart2 = async (req, res) => {
 exports.createOrder = async (req, res) => {
     // Obtiene la firma de Stripe de los headers
     const sig = req.headers["stripe-signature"];
+    const stripe = require("stripe")(process.env.STRIPE_KEY)
     const endpointSecret = process.env.STRIPE_WH_SIGNING_SECRET;
 
     let event;
@@ -252,7 +251,7 @@ exports.createOrder = async (req, res) => {
 exports.createCheckoutSession = async (req, res) => {
     // Obtiene el ID del usuario de la solicitud
     const userID = req.params.id;
-
+    const stripe = require("stripe")(process.env.STRIPE_KEY)
     console.log('body:', userID)
     // Encuentra al usuario en la base de datos por su ID
     const foundUser = await User.findOne({ _id: userID });
@@ -277,8 +276,8 @@ exports.createCheckoutSession = async (req, res) => {
     const session = await stripe.checkout.sessions.create({
         line_items,
         mode: "payment",
-        success_url: `${"http://localhost:5173/success"}`,
-        cancel_url: `${"http://localhost:5173/"}`,
+        success_url: `${process.env.REACT_BASE_URL}`,
+        cancel_url: `${process.env.REACT_BASE_URL}`,
         customer_email: foundUser.email,
     });
 
