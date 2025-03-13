@@ -1,4 +1,5 @@
 const Usuario = require('../models/User');
+const Cart = require("../models/Cart");
 const  bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -7,13 +8,28 @@ exports.createUser = async (req, res) => {
     try {
         const salt = await bcryptjs.genSalt(10);
         const hashedPassword = await bcryptjs.hash(password, salt);
+        const newCart = await Cart.create({});
 
         const createdUser = await Usuario.create({
             username,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            cart: newCart,
         })
-        return res.json( {message: 'Usuario Creado Correctamente'} );
+        const payload = { user: {  id: createdUser.id } };
+
+        jwt.sign(
+            payload,
+            process.env.SECRET,
+            {
+                expiresIn: 65000   //18 horas aprox.
+            },
+            (error, token) => {
+                if (error) throw error;
+                res.json({ token });
+            }
+        )
+        // return res.json( {message: 'Usuario Creado Correctamente'} );
     } catch (error) {
         return res.status(400).json({ message: error })
     }

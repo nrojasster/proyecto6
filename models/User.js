@@ -10,7 +10,12 @@ const UserSchema = mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    cart: {
+        type: mongoose.Types.ObjectId,
+        ref: "Cart",
+        default: [],
+      },
 }, {
     timestamps: true
 })
