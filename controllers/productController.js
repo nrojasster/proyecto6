@@ -4,7 +4,6 @@ const Product = require('../models/Product');
 //
 exports.getAllProducts = async (req, res) => {
     try {
-        // console.log('process.env.STRIPE_KEY=>', process.env.STRIPE_KEY)
         const product = await Product.find({}) 
         return res.json({ product })
     } catch (error) {
@@ -40,8 +39,7 @@ exports.updateProductById = async (req, res) => {
         const upProduct = 
 	        await Product.findByIdAndUpdate(id, { name, price, image }, { new: true })
         res.json(upProduct)
-    } catch (error) { 
-        console.log(error)       
+    } catch (error) {       
         res.status(500).json({ msg: "There was an error updating the Product" })
     }
 }
@@ -63,7 +61,6 @@ exports.deleteProductById = async (req, res) => {
 exports.create = async (req, res) => {
     const { name, description, currency, price, prices, image, img, slug } = req.body;
     const stripe = require("stripe")(process.env.STRIPE_KEY)
-    console.log(req.body);
   
     // STRIPE
     // A. PRODUCTO
@@ -106,9 +103,7 @@ exports.create = async (req, res) => {
           price: e.unit_amount,
         };
       });
-  
-      console.log("(110) productPrices", productPrices);
-  
+    
       const newProduct = await Product.create({
         idProd: product.id,
         name: product.name,

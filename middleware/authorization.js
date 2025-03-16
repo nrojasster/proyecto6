@@ -10,10 +10,8 @@ module.exports = (req, res, next) => {
     try {
         let [type, token] = authorization.split(" "); 
         if (type === 'Token' || type === 'Bearer') {
-            console.log('Authorization Token: ', token)
             const openToken = jwt.verify(token, process.env.SECRET);
             req.user = openToken.user
-            console.log('Authorization user: ', openToken.user)  //aqui se produce el error
             next()
         } else {
             return res.status(401).json({ message: 'Acceso no autorizado' })

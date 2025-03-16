@@ -79,13 +79,13 @@ exports.verifyUser = async (req, res) => {
 
 exports.updateUserById = async (req, res) => {
     const { id } = req.params;
-    const { username, email, password } = req.body
+    const { password } = req.body
     try {
         const salt = await bcryptjs.genSalt(10);
         const hashedPassword = await bcryptjs.hash(password, salt);
         
         const upUser = 
-	        await Usuario.findByIdAndUpdate(id, { username, email, password: hashedPassword }, { new: true })
+	        await Usuario.findByIdAndUpdate(id, { password: hashedPassword }, { new: true })
         res.json(upUser)
     } catch (error) {        
         res.status(500).json({ msg: "There was an error updating the User" })
