@@ -26,10 +26,11 @@ exports.editCart = async (req, res) => {
 
             const xx = await Cart.updateOne({ "products._id": filterCart[0]._id.toHexString() },
                 { $set: { "products.$.quantity": newCant } }, { upsert: true })
-            
+
 
         } else {
-            const newProd = { idProd: products.idProd,
+            const newProd = {
+                idProd: products.idProd,
                 quantity: 1, priceID: prices.id, name: products.name,
                 size: prices.size, priceDescription: prices.priceDescription,
                 price: products.price, img: products.image, slug: products.slug
@@ -65,9 +66,9 @@ exports.editCart2 = async (req, res) => {
 
         // Toma los nuevos datos de los productos de la solicitud
         const { products } = req.body;
-        
+
         // Actualiza el carrito con los nuevos datos de los productos
-        //buscar el producto en cart, si esta lo aumento en 1 caso contrario lo ingreso con cantidad=1
+        //buscar el producto en cart, si esta actualizo cantidad segun products.quantity
         const oldCart = await Cart.findOne({ _id: foundUser.cart.toHexString() })
         const filterCart = oldCart.products.filter((p) => p.idProd === products.idProd)
 
@@ -104,7 +105,7 @@ exports.deleteCartById = async (req, res) => {
         const idCart = foundUser.cart.toHexString()
 
         const upCart = await Cart.findByIdAndUpdate(idCart, { products: filterCart }, { new: true })
-        
+
         return res.json({
             msg: "carrito actualizado (3)",
             upCart,
@@ -152,7 +153,7 @@ exports.getCart2 = async (req, res) => {
         res.json({
             cart: foundCart.products,
         });
-        
+
 
     } catch (error) {
         console.log('getCart2 Error: ', error)
@@ -231,36 +232,43 @@ exports.createCheckoutSession = async (req, res) => {
     const userID = req.params.id;
     const stripe = require("stripe")(process.env.STRIPE_KEY)
 
-    // Encuentra al usuario en la base de datos por su ID
-    const foundUser = await User.findOne({ _id: userID });
+    try {
+        // Encuentra al usuario en la base de datos por su ID
+        const foundUser = await User.findOne({ _id: userID });
 
-    // Encuentra el carrito del usuario en la base de datos y llena los productos
-    const foundCart = await Cart.findById(foundUser.cart).populate({
-        path: "products",
-    });
+        // Encuentra el carrito del usuario en la base de datos y llena los productos
+        const foundCart = await Cart.findById(foundUser.cart).populate({
+            path: "products",
+        });
 
-    // Crea line_items para la sesión de Stripe a partir de los productos en el carrito
-    const line_items = foundCart.products.map((e) => {
-        return {
-            price: e.priceID,
-            quantity: e.quantity,
-        };
-    });
+        // Crea line_items para la sesión de Stripe a partir de los productos en el carrito
+        const line_items = foundCart.products.map((e) => {
+            return {
+                price: e.priceID,
+                quantity: e.quantity,
+            };
+        });
 
-    // Crea una sesión de checkout en Stripe
-    const session = await stripe.checkout.sessions.create({
-        line_items,
-        mode: "payment",
-        success_url: `${process.env.REACT_BASE_URL}`,
-        cancel_url: `${process.env.REACT_BASE_URL}`,
-        customer_email: foundUser.email,
-    });
+        // Crea una sesión de checkout en Stripe
+        const session = await stripe.checkout.sessions.create({
+            line_items,
+            mode: "payment",
+            success_url: `${process.env.REACT_BASE_URL}`,
+            cancel_url: `${process.env.REACT_BASE_URL_CANCEL}`,
+            customer_email: foundUser.email,
+        });
 
-    //Vaciar Carro
-    const upCart = await Cart.findByIdAndUpdate(foundCart._id, { products: [] }, { new: true })
- 
-    res.json({
-        session_url: session.url,
-        session: session,
-    });
+        //Vaciar Carro
+        const upCart = await Cart.findByIdAndUpdate(foundCart._id, { products: [] }, { new: true })
+
+        res.json({
+            session_url: session.url,
+            session: session,
+        });
+    } catch (error) {
+        console.log('createCheckoutSession: ', error)
+    }
+
+
+
 };

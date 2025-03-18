@@ -50,5 +50,11 @@ Variables de entorno:
 
 **SECRET** (frase para encriptar)
 
+**REACT_BASE_URL** (ruta pago stripe exitosa)
+
+**REACT_BASE_URL_CANCEL** (ruta pago fallido en Stripe)
+
+**STRIPE_KEY** (api Key proporcionada por Stripe ambiente pruebas)
+
 
 
