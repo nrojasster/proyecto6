@@ -10,7 +10,7 @@ require('dotenv').config()
 connectDB();
 
 app.use(cors({
-  origin: 'https://proyecto-final-dwfsc16.netlify.app/', 
+  origin: '*', 
   methods: 'GET,POST,PUT,DELETE',
   credentials: true
 }))
