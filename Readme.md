@@ -17,11 +17,12 @@ nota: No describire los otros endpoints del controlador Products ya que no se ut
 **EndPoints User**
 
 (POST) https://proyecto6-a7j5.onrender.com/api/user/register ==> Permite Crear un nuevo usuario indicando username, email y contraseña y un carro vacío en la coleccion Carts, no requiere token de autenticación, usar el siguiente json:
-    {
+
+    {    
     "username": "PPerez",
 
     "email": "rolguin@mail.com",
-    
+
     "password": "qazwsxed4"
     }
 
