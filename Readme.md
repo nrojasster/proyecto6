@@ -6,7 +6,7 @@
 
 **Aplicación BackEnd con Autenticación utilizando NodeJs y MongoDB Atlas**, la cual admite los siguientes Endpoints:
 
-**Product** (frutas y/o Verduras): getAllProducts
+**Product** (frutas y/o Verduras):
 
 (GET) https://proyecto6-a7j5.onrender.com/api/product/readall ==> Permite ver todos los elementos de la colección Products, no es necesario el token de autenticación.
 
@@ -19,7 +19,9 @@ nota: No describire los otros endpoints del controlador Products ya que no se ut
 (POST) https://proyecto6-a7j5.onrender.com/api/user/register ==> Permite Crear un nuevo usuario indicando username, email y contraseña y un carro vacío en la coleccion Carts, no requiere token de autenticación, usar el siguiente json:
     {
     "username": "PPerez",
+
     "email": "rolguin@mail.com",
+    
     "password": "qazwsxed4"
     }
 
